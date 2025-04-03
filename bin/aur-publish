@@ -145,7 +145,7 @@ if [[ -n "$git_username" ]]; then
 fi
 
 git add PKGBUILD .SRCINFO
-git diff --cached --color=always
+git --no-pager diff --cached --color=always
 git commit -m "Release $pkgver"
 echo "::endgroup::"
 
