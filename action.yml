@@ -1,0 +1,44 @@
+name: AUR Publish
+description: Publish an update to an existing AUR package
+
+inputs:
+  package:
+    description: |
+      Name of the AUR package to publish
+    required: true
+  version:
+    description: |
+      Updated `pkgver` to set in the PKGBUILD
+    required: true
+  release:
+    description: |
+      Updated `pkgrel` to set in the PKGBUILD
+    default: '1'
+  git-email:
+    description: |
+      `git user.email` to set before comitting
+    default: '${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com'
+  git-username:
+    description: |
+      `git user.name` to set before committing
+    default: '${{ github.actor }}'
+  publish:
+    description: |
+      Actually publish?
+    default: 'true'
+
+runs:
+  using: docker
+  image: Dockerfile
+  args:
+    - aur-publish
+    - ${{ inputs.package }}
+    - --version
+    - ${{ inputs.version }}
+    - --release
+    - ${{ inputs.release }}
+    - --git-email
+    - ${{ inputs.git-email }}
+    - --git-username
+    - ${{ inputs.git-username }}
+    - ${{ inputs.publish == 'true' && '--publish' || '--no-publish' }}

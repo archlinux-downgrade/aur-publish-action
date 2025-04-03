@@ -1,0 +1,4 @@
+# vim: ft=sshconfig
+Host aur.archlinux.org
+  IdentityFile ~/.ssh/aur
+  User aur

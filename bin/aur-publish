@@ -1,0 +1,162 @@
+#!/usr/bin/env bash
+set -euo pipefail
+export HOME=/home/app # fix weird actions env
+
+usage() {
+  cat <<'EOM'
+aur-publish --version=VERSION [--release=NUMBER] [--[no-]publish] PACKAGE
+Update an existing PKGBUILD's pkgver and publish
+
+Options:
+  --version VERSION             Updated pkgver, required
+  --release NUMBER              Updated pkgrel, default is 1
+
+  --git-email EMAIL             If given, set this git email before comitting
+  --git-username NAME           If given, set this git username before comitting
+
+  --[no-]publish                Actually push to the AUR repository or not,
+                                default is to publish
+
+  -h, --help                    Show this usage
+
+  PACKAGE                       Name of AUR package to publish
+
+Environment:
+  SSH_PRIVATE_KEY               Private key with AUR access
+EOM
+}
+
+pkgname=
+pkgver=
+pkgrel=1
+git_email=
+git_username=
+publish=0
+
+while (($#)); do
+  case "$1" in
+    --pkgname)
+      shift
+      pkgname=$1
+      ;;
+    --version)
+      shift
+      pkgver="${1//-/_}"
+      ;;
+    --release)
+      shift
+      pkgrel=$1
+      ;;
+    --git-email)
+      shift
+      git_email=$1
+      ;;
+    --git-username)
+      shift
+      git_username=$1
+      ;;
+    --publish)
+      publish=1
+      ;;
+    --no-publish)
+      publish=0
+      ;;
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    -*)
+      echo "Invalid option $1" >&2
+      usage >&2
+      exit 64
+      ;;
+    *)
+      # The first non-option is taken as PACKAGE, if more are given we fail
+      if [[ -n "$pkgname" ]]; then
+        echo "Extra argument $1" >&2
+        usage >&2
+        exit 64
+      fi
+      pkgname=$1
+      ;;
+  esac
+  shift
+done
+
+if [[ -z "$pkgname" ]]; then
+  echo "PACKAGE is required" >&2
+  exit 64
+fi
+
+if [[ -z "$pkgver" ]]; then
+  echo "--version is required" >&2
+  exit 64
+fi
+
+if [[ -z "${SSH_PRIVATE_KEY:-}" ]]; then
+  echo "SSH_PRIVATE_KEY must be set" >&2
+  exit 1
+fi
+
+echo "::group::Publish information"
+cat <<EOM
+git config:
+  user.email: ${git_email:-default}
+  user.name:  ${git_username:-default}
+
+PKGBUILD
+  pkgname: $pkgname
+  pkgver:  $pkgver
+  pkgrel:  $pkgrel
+
+Will git push? $( ((publish)) && echo 'true' || echo 'false' )
+EOM
+echo "::endgroup::"
+
+cd /home/app
+
+echo "::group::Configuring SSH"
+cat > ./.ssh/aur <<EOM
+$SSH_PRIVATE_KEY
+EOM
+
+chmod 600 ./.ssh/aur
+echo "::endgroup::"
+
+echo "::group::Cloning repository"
+git -c init.defaultBranch=master clone "ssh://aur@aur.archlinux.org/$pkgname.git" "$pkgname"
+cd "$pkgname"
+echo "::endgroup::"
+
+echo "::group::Update PKGBUILD and .SRCINFO"
+sed -i 's/^pkgver=.*$/pkgver='"$pkgver/" PKGBUILD
+sed -i 's/^pkgrel=.*$/pkgrel='"$pkgrel/" PKGBUILD
+updpkgsums
+makepkg --printsrcinfo >.SRCINFO
+echo "::endgroup::"
+
+echo "::group::Commit"
+if [[ -n "$git_email" ]]; then
+  git config --global user.email "$git_email"
+fi
+
+if [[ -n "$git_username" ]]; then
+  git config --global user.name "$git_username"
+fi
+
+git add PKGBUILD .SRCINFO
+git diff --cached --color=always
+git commit -m "Release $pkgver"
+echo "::endgroup::"
+
+echo "::group::Test install"
+makepkg --syncdeps --install --force --noconfirm
+echo "::endgroup::"
+
+echo "::group::Push"
+if ((publish)); then
+  git push
+else
+  echo "::warning title=Not pushing::The \`--no-publish\` flag was used"
+fi
+echo "::endgroup::"
