@@ -32,4 +32,5 @@ RUN \
   chmod 700 ./.ssh && \
   chmod 600 ./.ssh/config
 
+ENV DOCKERIZED=1
 CMD ["aur-publish", "--help"]
