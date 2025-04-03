@@ -2,8 +2,6 @@
 
 Publish an update to an existing AUR package
 
-## Usage
-
 <!-- action-docs-usage action="action.yml" -->
 
 ## Usage
