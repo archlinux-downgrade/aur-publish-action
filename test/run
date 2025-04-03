@@ -2,7 +2,7 @@
 set -euo pipefail
 
 docker build --tag archlinux-downgrade/aur-publish-action:testing .
-docker run --rm \
+docker run -it --rm \
   --env "SSH_PRIVATE_KEY=$(< ~/.ssh/aur)" \
   archlinux-downgrade/aur-publish-action:testing aur-publish downgrade \
       --version "11.5.1_rc_aur.1" \
