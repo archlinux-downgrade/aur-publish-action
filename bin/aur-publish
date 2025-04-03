@@ -14,7 +14,6 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 set -euo pipefail
-export HOME=/home/app # fix weird actions env
 
 usage() {
   cat <<'EOM'
@@ -36,7 +35,7 @@ Options:
   PACKAGE                       Name of AUR package to publish
 
 Environment:
-  SSH_PRIVATE_KEY               Private key with AUR access
+  SSH_PRIVATE_KEY               Private key with AUR access, if run in Docker
 EOM
 }
 
@@ -46,6 +45,8 @@ pkgrel=1
 git_email=
 git_username=
 publish=0
+
+: "${DOCKERIZED:=0}"
 
 while (($#)); do
   case "$1" in
@@ -107,7 +108,7 @@ if [[ -z "$pkgver" ]]; then
   exit 64
 fi
 
-if [[ -z "${SSH_PRIVATE_KEY:-}" ]]; then
+if ((DOCKERIZED)) && [[ -z "${SSH_PRIVATE_KEY:-}" ]]; then
   echo "SSH_PRIVATE_KEY must be set" >&2
   exit 1
 fi
@@ -127,17 +128,25 @@ if ((!publish)); then
   printf '\e[1mNOTE\e[0m: \e[31m--no-publish\e[0m given, will not actually git-push\n'
 fi
 
+if ((!DOCKERIZED)); then
+  printf '\e[1mNOTE\e[0m: running outside docker, SSH will not be configured.\n'
+fi
+
 echo "::endgroup::"
 
-cd /home/app
+if ((DOCKERIZED)); then
+  # Fix GHA $HOME and WORKDIR, if necessary
+  export HOME=/home/app
+  cd "$HOME"
 
-echo "::group::Configuring SSH"
-cat > ./.ssh/aur <<EOM
+  echo "::group::Configuring SSH"
+  cat > ./.ssh/aur <<EOM
 $SSH_PRIVATE_KEY
 EOM
 
-chmod 600 ./.ssh/aur
-echo "::endgroup::"
+  chmod 600 ./.ssh/aur
+  echo "::endgroup::"
+fi
 
 echo "::group::Cloning repository"
 git -c init.defaultBranch=master clone "ssh://aur@aur.archlinux.org/$pkgname.git" "$pkgname"

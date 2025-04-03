@@ -30,6 +30,10 @@ fully automating the release of a project through to publishing it to the AUR.
 
 You can place `bin/aur-publish` on `$PATH` and use it directly.
 
+> [!NOTE]
+> This will skip any SSH configuration before cloning; you are expected to have
+> that pre-configured.
+
 ```console
 % aur-publish --help
 aur-publish --version=VERSION [--release=NUMBER] [--[no-]publish] PACKAGE
@@ -50,7 +54,7 @@ Options:
   PACKAGE                       Name of AUR package to publish
 
 Environment:
-  SSH_PRIVATE_KEY               Private key with AUR access
+  SSH_PRIVATE_KEY               Private key with AUR access, if run in Docker
 ```
 
 ## Docker Example
