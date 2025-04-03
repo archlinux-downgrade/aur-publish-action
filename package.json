@@ -1,0 +1,9 @@
+{
+  "scripts": {
+    "readme": "npx action-docs -u && prettier --write README.md"
+  },
+  "devDependencies": {
+    "action-docs": "^2.5.1",
+    "prettier": "^3.5.3"
+  }
+}
