@@ -76,7 +76,7 @@ jobs:
     # ...
     outputs:
       published: # true if a release occurred
-      version:   # the version that was released
+      version: # the version that was released
 
   pkgbuild:
     needs: [release]
@@ -98,12 +98,12 @@ See [`downgrade`][downgrade] for a complete example.
 
 [downgrade]: https://github.com/archlinux-downgrade/downgrade
 
-<!-- action-docs-usage action="action.yml" -->
+<!-- action-docs-usage action="action.yml" project="archlinux-downgrade/aur-publish-action" version="v1" -->
 
 ## Usage
 
 ```yaml
-- uses: @
+- uses: archlinux-downgrade/aur-publish-action@v1
   with:
     package:
     # Name of the AUR package to publish
@@ -142,7 +142,7 @@ See [`downgrade`][downgrade] for a complete example.
     # Default: true
 ```
 
-<!-- action-docs-usage action="action.yml" -->
+<!-- action-docs-usage action="action.yml" project="archlinux-downgrade/aur-publish-action" version="v1" -->
 
 <!-- action-docs-inputs action="action.yml" -->
 
