@@ -99,18 +99,20 @@ if [[ -z "${SSH_PRIVATE_KEY:-}" ]]; then
 fi
 
 echo "::group::Publish information"
-cat <<EOM
-git config:
-  user.email: ${git_email:-default}
-  user.name:  ${git_username:-default}
+printf '\e[32mgit config\e[0m:\n'
+printf '  \e[35muser.email\e[0m: \e[34m%s\e[0m\n' "${git_email:-default}"
+printf '  \e[35muser.name\e[0m:  \e[34m%s\e[0m\n' "${git_username:-default}"
+printf '\n'
+printf '\e[32mPKGBUILD\e[0m:\n'
+printf '  \e[35mpkgname\e[0m:    \e[34m%s\e[0m\n' "$pkgname"
+printf '  \e[35mpkgver\e[0m:     \e[34m%s\e[0m\n' "$pkgver"
+printf '  \e[35mpkgrel\e[0m:     \e[34m%s\e[0m\n' "$pkgrel"
+printf '\n'
 
-PKGBUILD
-  pkgname: $pkgname
-  pkgver:  $pkgver
-  pkgrel:  $pkgrel
+if ((!publish)); then
+  printf '\e[1mNOTE\e[0m: \e[31m--no-publish\e[0m given, will not actually git-push\n'
+fi
 
-Will git push? $( ((publish)) && echo 'true' || echo 'false' )
-EOM
 echo "::endgroup::"
 
 cd /home/app
