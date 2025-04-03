@@ -98,52 +98,6 @@ See [`downgrade`][downgrade] for a complete example.
 
 [downgrade]: https://github.com/archlinux-downgrade/downgrade
 
-<!-- action-docs-usage action="action.yml" project="archlinux-downgrade/aur-publish-action" version="v1" -->
-
-## Usage
-
-```yaml
-- uses: archlinux-downgrade/aur-publish-action@v1
-  with:
-    package:
-    # Name of the AUR package to publish
-    #
-    # Required: true
-    # Default: ""
-
-    version:
-    # Updated `pkgver` to set in the PKGBUILD
-    #
-    # Required: true
-    # Default: ""
-
-    release:
-    # Updated `pkgrel` to set in the PKGBUILD
-    #
-    # Required: false
-    # Default: 1
-
-    git-email:
-    # `git user.email` to set before comitting
-    #
-    # Required: false
-    # Default: ${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com
-
-    git-username:
-    # `git user.name` to set before committing
-    #
-    # Required: false
-    # Default: ${{ github.actor }}
-
-    publish:
-    # Actually publish?
-    #
-    # Required: false
-    # Default: true
-```
-
-<!-- action-docs-usage action="action.yml" project="archlinux-downgrade/aur-publish-action" version="v1" -->
-
 <!-- action-docs-inputs action="action.yml" -->
 
 ## Inputs
