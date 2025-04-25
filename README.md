@@ -47,7 +47,7 @@ Options:
   --git-username NAME           If given, set this git username before comitting
 
   --[no-]publish                Actually push to the AUR repository or not,
-                                default is to publish
+                                default is NOT to publish
 
   -h, --help                    Show this usage
 
