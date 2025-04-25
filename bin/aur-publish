@@ -40,13 +40,13 @@ EOM
 }
 
 if [[ "${GITHUB_ACTIONS:-false}" == 'true' ]]; then
-  group()    { echo "::group::$1"; }
+  group() { echo "::group::$1"; }
   endgroup() { echo "::endgroup::"; }
-  warning()  { echo "::warning title=$1::$2"; }
+  warning() { echo "::warning title=$1::$2"; }
 else
-  group()    { printf '\e[1m\e[34m::\e[0m \e[1m%s\e[0m\n' "$1"; }
+  group() { printf '\e[1m\e[34m::\e[0m \e[1m%s\e[0m\n' "$1"; }
   endgroup() { echo; }
-  warning()  { printf '\e[1;33mwarning\e[0m: \e[1m%s\e[0m. %s\n' "$1" "$2"; }
+  warning() { printf '\e[1;33mwarning\e[0m: \e[1m%s\e[0m. %s\n' "$1" "$2"; }
 fi
 
 pkgname=
@@ -86,7 +86,7 @@ while (($#)); do
     --no-publish)
       publish=0
       ;;
-    -h|--help)
+    -h | --help)
       usage
       exit 0
       ;;
@@ -150,7 +150,7 @@ if ((DOCKERIZED)); then
   cd "$HOME"
 
   group "Configuring SSH"
-  cat > ./.ssh/aur <<EOM
+  cat >./.ssh/aur <<EOM
 $SSH_PRIVATE_KEY
 EOM
 
