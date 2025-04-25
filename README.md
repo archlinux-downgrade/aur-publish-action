@@ -65,7 +65,7 @@ Environment:
   --env "SSH_PRIVATE_KEY=$(< ~/.ssh/aur)" \
   aur-publish \
   aur-publish downgrade \
-    --version "11.5.1_rc_aur.1" \
+    --version "11.5.1-rc-aur.1" \
     --git-email "$(git config get user.email)" \
     --git-username "$(git config get user.name)" \
     --no-publish
