@@ -13,19 +13,19 @@ inputs:
   release:
     description: |
       Updated `pkgrel` to set in the PKGBUILD
-    default: '1'
+    default: "1"
   git-email:
     description: |
       `git user.email` to set before comitting
-    default: '${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com'
+    default: "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com"
   git-username:
     description: |
       `git user.name` to set before committing
-    default: '${{ github.actor }}'
+    default: "${{ github.actor }}"
   publish:
     description: |
       Actually publish?
-    default: 'true'
+    default: "true"
 
 runs:
   using: docker
