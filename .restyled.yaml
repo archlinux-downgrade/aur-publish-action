@@ -1,0 +1,2 @@
+commit_template: |
+  chore(style): restyled by ${restyler.name}
