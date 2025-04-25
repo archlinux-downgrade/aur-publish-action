@@ -19,7 +19,7 @@ docker build --tag archlinux-downgrade/aur-publish-action:testing .
 docker run -it --rm \
   --env "SSH_PRIVATE_KEY=$(< ~/.ssh/aur)" \
   archlinux-downgrade/aur-publish-action:testing aur-publish downgrade \
-      --version "11.5.1_rc_aur.1" \
+      --version "11.5.1-rc-aur.1" \
       --git-email "$(git config get user.email)" \
       --git-username "$(git config get user.name)" \
       --no-publish
