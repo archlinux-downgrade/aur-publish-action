@@ -46,8 +46,17 @@ Options:
   --git-email EMAIL             If given, set this git email before comitting
   --git-username NAME           If given, set this git username before comitting
 
+  --dry-run                     Print what we'd do and exit without doing so
+
   --[no-]publish                Actually push to the AUR repository or not,
                                 default is NOT to publish
+
+  --sed SCRIPT                  Run `sed -i SCRIPT PKGBUILD'
+
+                                Can be given multiple times. This occurs after
+                                updating version and release but before running
+                                updpkgsums and can be useful to apply one-time
+                                updates, such as changing the project URL.
 
   -h, --help                    Show this usage
 
