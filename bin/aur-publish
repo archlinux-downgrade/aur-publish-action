@@ -27,6 +27,8 @@ Options:
   --git-email EMAIL             If given, set this git email before comitting
   --git-username NAME           If given, set this git username before comitting
 
+  --dry-run                     Print what we'd do and exit without doing so
+
   --[no-]publish                Actually push to the AUR repository or not,
                                 default is NOT to publish
 
@@ -54,6 +56,7 @@ pkgver=
 pkgrel=1
 git_email=
 git_username=
+dry_run=0
 publish=0
 
 : "${DOCKERIZED:=0}"
@@ -79,6 +82,9 @@ while (($#)); do
     --git-username)
       shift
       git_username=$1
+      ;;
+    --dry-run)
+      dry_run=1
       ;;
     --publish)
       publish=1
@@ -140,6 +146,11 @@ fi
 
 if ((!DOCKERIZED)); then
   printf '\e[1mNOTE\e[0m: running outside docker, SSH will not be configured.\n'
+fi
+
+if ((dry_run)); then
+  printf '\e[1mNOTE\e[0m: \e[31m--dry-run\e[0m given, exiting\n'
+  exit 0
 fi
 
 endgroup
