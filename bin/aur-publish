@@ -32,6 +32,13 @@ Options:
   --[no-]publish                Actually push to the AUR repository or not,
                                 default is NOT to publish
 
+  --sed SCRIPT                  Run `sed -i SCRIPT PKGBUILD'
+
+                                Can be given multiple times. This occurs after
+                                updating version and release but before running
+                                updpkgsums and can be useful to apply one-time
+                                updates, such as changing the project URL.
+
   -h, --help                    Show this usage
 
   PACKAGE                       Name of AUR package to publish
@@ -58,6 +65,7 @@ git_email=
 git_username=
 dry_run=0
 publish=0
+seds=()
 
 : "${DOCKERIZED:=0}"
 
@@ -91,6 +99,12 @@ while (($#)); do
       ;;
     --no-publish)
       publish=0
+      ;;
+    --sed)
+      shift
+      if [[ -n "$1" ]]; then
+        seds+=("$1")
+      fi
       ;;
     -h | --help)
       usage
@@ -140,6 +154,10 @@ printf '  \e[35mpkgver\e[0m:     \e[34m%s\e[0m\n' "$pkgver"
 printf '  \e[35mpkgrel\e[0m:     \e[34m%s\e[0m\n' "$pkgrel"
 printf '\n'
 
+for s in "${seds[@]}"; do
+  printf '\e[1mNOTE\e[0m: \e[31m--sed\e[0m given, will run \e[34msed -i '\''%s'\'' PKGBUILD\e[0m\n' "$s"
+done
+
 if ((!publish)); then
   printf '\e[1mNOTE\e[0m: \e[31m--no-publish\e[0m given, will not actually git-push\n'
 fi
@@ -177,6 +195,11 @@ endgroup
 group "Update PKGBUILD and .SRCINFO"
 sed -i 's/^pkgver=.*$/pkgver='"$pkgver/" PKGBUILD
 sed -i 's/^pkgrel=.*$/pkgrel='"$pkgrel/" PKGBUILD
+
+for s in "${seds[@]}"; do
+  sed -i "$s" PKGBUILD
+done
+
 updpkgsums
 makepkg --printsrcinfo >.SRCINFO
 endgroup
