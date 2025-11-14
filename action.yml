@@ -26,6 +26,10 @@ inputs:
     description: |
       Actually publish?
     default: "true"
+  sed:
+    description: |
+      Additional `sed` expression to run on the PKGBUILD before committing
+    default: ""
 
 runs:
   using: docker
@@ -41,4 +45,6 @@ runs:
     - ${{ inputs.git-email }}
     - --git-username
     - ${{ inputs.git-username }}
+    - --sed
+    - ${{ inputs.sed }}
     - ${{ inputs.publish == 'true' && '--publish' || '--no-publish' }}

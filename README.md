@@ -115,14 +115,15 @@ See [`downgrade`][downgrade] for a complete example.
 
 ## Inputs
 
-| name           | description                                                | required | default                                                               |
-| -------------- | ---------------------------------------------------------- | -------- | --------------------------------------------------------------------- |
-| `package`      | <p>Name of the AUR package to publish</p>                  | `true`   | `""`                                                                  |
-| `version`      | <p>Updated <code>pkgver</code> to set in the PKGBUILD</p>  | `true`   | `""`                                                                  |
-| `release`      | <p>Updated <code>pkgrel</code> to set in the PKGBUILD</p>  | `false`  | `1`                                                                   |
-| `git-email`    | <p><code>git user.email</code> to set before comitting</p> | `false`  | `${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com` |
-| `git-username` | <p><code>git user.name</code> to set before committing</p> | `false`  | `${{ github.actor }}`                                                 |
-| `publish`      | <p>Actually publish?</p>                                   | `false`  | `true`                                                                |
+| name           | description                                                                            | required | default                                                               |
+| -------------- | -------------------------------------------------------------------------------------- | -------- | --------------------------------------------------------------------- |
+| `package`      | <p>Name of the AUR package to publish</p>                                              | `true`   | `""`                                                                  |
+| `version`      | <p>Updated <code>pkgver</code> to set in the PKGBUILD</p>                              | `true`   | `""`                                                                  |
+| `release`      | <p>Updated <code>pkgrel</code> to set in the PKGBUILD</p>                              | `false`  | `1`                                                                   |
+| `git-email`    | <p><code>git user.email</code> to set before comitting</p>                             | `false`  | `${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com` |
+| `git-username` | <p><code>git user.name</code> to set before committing</p>                             | `false`  | `${{ github.actor }}`                                                 |
+| `publish`      | <p>Actually publish?</p>                                                               | `false`  | `true`                                                                |
+| `sed`          | <p>Additional <code>sed</code> expression to run on the PKGBUILD before committing</p> | `false`  | `""`                                                                  |
 
 <!-- action-docs-inputs action="action.yml" -->
 
